@@ -1,0 +1,11 @@
+#Peiqi Hu, 1002263935, peiqi.hu@mail.utoronto.ca
+#Jeff
+
+------------------------------------------------------------------------
+sploit1: This is a buffer overflow vulnerability which strcpy a 112 bytes buffer. To overwrite the memory from the beginning of the buffer to the rip, we inject a buffer with 141 bytes which starts with 91 NOPs, then the shellcode and lastly the guessed return address with a null terminator. The guessed return address is the beginning of the buffer's location.  
+
+------------------------------------------------------------------------
+sploit3: This is a buffer overflow, similar to sploit1, with buffer size 64 bytes. Using gdb(especially inside foo) to figure out rip and the targ location, and then calculate the buffer size needs to exploit the vulnerability is 69 bytes. Fill the attacker buffer first with 19 NOPS, then shellcode and the guessed return address with a null terminator.  
+
+------------------------------------------------------------------------
+sploit6: This is a double free vulnerability. We create two fake tags, one right before the q, the other right after the p's real tag. By finding the difference between the memory location of p and q (which is 80 bytes), we create a buffer with 81 bytes (extra byte for null). Fill the buffer with first fake tag(its prev points to the p.tag.next, its next filled with x01), following with the shellcode, then fill with x01 again until the second fake tag. The second fake tag's prev points to the &p, next points to the guessed return address which is &rip. Lastly, fill the last byte of the buffer with null. 

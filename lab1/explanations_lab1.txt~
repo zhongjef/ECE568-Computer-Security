@@ -1,0 +1,6 @@
+#Peiqi Hu, 1002263935, peiqi.hu@mail.utoronto.ca
+#Jed
+
+sploit1: This is a buffer overflow vulnerability which strcpy a 112 bytes buffer. To overwrite the memory from the beginning of the buffer to the rip, we inject a buffer with 141 bytes which starts with 91 NOPs, then the shellcode and lastly the guessed return address with a null terminator. 
+
+sploit3: This is a buffer overflow, similar to sploit1, with buffer size 64 bytes. Using gdb(especially inside foo) to figure out rip and the targ location and calculate the buffer size needs to exploit the vulnerability is 69 bytes. Fill the attacker buffer first with 19 NOPS, then shellcode and the guessed return address with a null terminator.  
