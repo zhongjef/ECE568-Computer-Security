@@ -8,11 +8,29 @@ then the shellcode and lastly the guessed return address with a null terminator.
 The guessed return address is the beginning of the buffer's location.  
 
 ------------------------------------------------------------------------
+sploit2: An exploit targeting buffer overflow vulnerability in target2.c
+
+Target2's buffer is of size 252, and our attack string is 288 characters
+long. In order to override the buffer, we override the loop counter j and
+loop condition len to ultimately override the return address. The critical
+part was to ensure the order the variables are declared, and how to use 
+environmental variables to send in the NULL terminators.
+
+------------------------------------------------------------------------
 sploit3: This is a buffer overflow, similar to sploit1, with buffer size 64 bytes. 
 Using gdb(especially inside foo) to figure out rip and the targ location, 
 and then calculate the buffer size needs to exploit the vulnerability is 69 bytes. 
 Fill the attacker buffer first with 19 NOPS, then shellcode and the guessed return address
 with a null terminator.  
+
+------------------------------------------------------------------------
+sploit4: An exploit targeting buffer overflow vulnerability in target4.c
+
+Target4's buffer is of size 188 and our attack string has 224 characters.
+This sploit is similar to sploit2.c in which both sploit override loop counter
+and loop conditions. However, more more environmental variables must be used
+to pass in more NULL terminators. A critical part of this sploit is to
+realize in what order the variables are delcared.
 
 ------------------------------------------------------------------------
 sploit5: This is a format string vulnerability. By using gdb, we find that 
