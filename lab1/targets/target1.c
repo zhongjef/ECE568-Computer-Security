@@ -14,8 +14,6 @@ lab_main ( int argc, char *argv[] )
 {
 	int	t = 2;
 	char	buf[112];
-	buf[0] = '\x11';
-	buf[1] = 0x90;
 	printf ("Target1 running.\n");
 
 	if (argc != t)

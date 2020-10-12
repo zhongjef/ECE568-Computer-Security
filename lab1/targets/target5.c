@@ -14,7 +14,6 @@ foo ( char *arg )
 	
 	memcpy(formatString, arg, 256);
 	snprintf(buf, sizeof(buf), &formatString[60]);
-
 	return (0);
 }
 
