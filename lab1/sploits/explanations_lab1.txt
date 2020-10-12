@@ -1,5 +1,5 @@
 #Peiqi Hu, 1002263935, peiqi.hu@mail.utoronto.ca
-#Jeff
+#Jefferson Zhong, 1003946000, jefferson.zhong@mail.utoronto.ca
 
 ------------------------------------------------------------------------
 sploit1: This is a buffer overflow vulnerability. To overwrite the memory from the beginning 
