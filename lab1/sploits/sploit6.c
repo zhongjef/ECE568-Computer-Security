@@ -15,8 +15,6 @@ int main(void)
   char *args[3];
   char *env[1];
 
-  args[0] = TARGET; 
-  args[1] = "hi there"; 
   char buf_overflow[BUFSIZE];
   int i;
   memset(buf_overflow, '\x01', BUFSIZE);
