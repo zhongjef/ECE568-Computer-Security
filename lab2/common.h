@@ -15,13 +15,11 @@
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
-#include <openssl/ssl.h>
 
-#define CA_LIST "root.pem"
-#define HOST	"localhost"
-#define RANDOM  "random.pem"
-#define PORT	4433
-#define BUFSIZZ 1024
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
+#define CA_LIST "568ca.pem"
 
 extern BIO *bio_err;
 int berr_exit (char *string);
