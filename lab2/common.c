@@ -34,7 +34,7 @@ static void sigpipe_handle(int x){
 }
 
 //context initialization
-SSL_CTX *initialize_ctx(char *keyfile, char *password) {
+SSL_CTX *initialize_ctx(char *keyfile, char *password, char *CA_LIST) {
     const SSL_METHOD *meth;
     SSL_CTX *ctx;
     if (!bio_err) {
@@ -67,9 +67,9 @@ SSL_CTX *initialize_ctx(char *keyfile, char *password) {
     /* Load the CAs we trust*/
     if(!(SSL_CTX_load_verify_locations(ctx, CA_LIST,0)))
       berr_exit("Can't read CA list");
-#if (OPENSSL_VERSION_NUMBER < 0x00905100L)
-    SSL_CTX_set_verify_depth(ctx,1);
-#endif
+    #if (OPENSSL_VERSION_NUMBER < 0x00905100L)
+        SSL_CTX_set_verify_depth(ctx,1);
+    #endif
 
     return ctx;
   }
