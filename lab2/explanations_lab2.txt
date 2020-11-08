@@ -1,0 +1,38 @@
+#Peiqi Hu, 1002263935, peiqi.hu@mail.utoronto.ca
+#Jefferson Zhong, 1003946000, jefferson.zhong@mail.utoronto.ca
+
+NOTE: PORT 5522 is used instead of the default 8765.
+
+"common.c"
+    - implements common functions used by "server.c" and "client.c".
+"server.c"
+    Implements a server. We implemented SSL protocols to secure the
+    TCP connection between server and client. The process was divided
+    into three phases:
+        1. Connection set up phase:
+            Use SSL_CTX_set_cipher_list to make the server support SSLv2, 
+            SSLv3 and TLSv1.
+            Verify peer certificate; if the verification did not go through,
+            shutdown the connection, print error messages accordingly.
+        2. Communication Phase:
+             Read the request from the client and reply "42" as the response
+            to every request from the client. Message sent via TCP socket
+            uses SSL_read and SSL_write such that the content will be
+            decrypted and encrypted with corresponding SSL certifications.
+        3. Shutdown Phase:
+            Shutdown the connection with the client properly by freeing up
+            allocated SSL resources and notify the peer with SSL_shutdown.
+"client.c"
+    Implements a client that requests a server connection and asks the server
+    a question. We implemented SSL protocols to secure the TCP connection 
+    similar to "server.c", but with a minor difference:
+        1. Connection set up phase:
+             The client specifically requires the server to use "SHA1"
+             hashing algorithm, and communicate with the server 
+             using protocol only SSLv3 or TLSv1. It also checks the
+             common name, email, and certification issuer of the server.
+        2. Communication phase:
+            Same as "server.c", but sends a request first, then read the
+            server's reply.
+        3. Shutdown phase:
+            Same as the "server.c"

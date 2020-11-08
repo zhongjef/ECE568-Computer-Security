@@ -30,4 +30,3 @@ common.o: common.c
 
 clean:
 	$(RM) $(targets) $(sources:.c=.o) *~
-

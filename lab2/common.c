@@ -10,16 +10,14 @@ static int password_cb(char *buf, int num, int rwflag, void *userdata);
 static void sigpipe_handle(int x);
 
 /* A simple error and exit routine*/
-int err_exit(char *string) {
-  fprintf(stderr,"%s\n",string);
-  exit(0);
+void err_exit(char *string) {
+  fprintf(stderr, "%s", string);
 }
 
 /* Print SSL errors and exit*/
-int berr_exit(char *string) {
-  BIO_printf(bio_err, "%s\n", string);
+void berr_exit(char *string) {
+  BIO_printf(bio_err, "%s", string);
   ERR_print_errors(bio_err);
-  exit(1);
 }
 
 /*The password code is not thread safe*/
@@ -31,6 +29,7 @@ static int password_cb(char *buf,int num, int rwflag,void *userdata) {
 }
 
 static void sigpipe_handle(int x){
+
 }
 
 //context initialization
