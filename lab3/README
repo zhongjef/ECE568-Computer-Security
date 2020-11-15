@@ -1,0 +1,7 @@
+#Peiqi Hu, 1002263935, peiqi.hu@mail.utoronto.ca
+#Jefferson Zhong, 1003946000, jefferson.zhong@mail.utoronto.ca
+
+PART1: Phishing with XSS
+	- We input HTML code in the search bar for which creates a
+	fake login form. Credentials submitted through the form will
+	be uploaded to the hacker's server.
