@@ -11,3 +11,7 @@ PART2: Reflected XSS Attacks
 	- We injected encoded onclick function into existing HTML
 	element through passing parameters in the URL. The onclick
 	function will upload user credentials to the hacker's server.
+
+PART3: Cross Site Request Forgery (CSRF)
+	- We injected img element with malicious src for which when
+	loaded will transfer recipient's balance.
