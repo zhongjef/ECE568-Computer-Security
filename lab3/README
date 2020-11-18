@@ -15,3 +15,8 @@ PART2: Reflected XSS Attacks
 PART3: Cross Site Request Forgery (CSRF)
 	- We injected img element with malicious src for which when
 	loaded will transfer recipient's balance.
+
+PART4: CSRF Prompt By-Pass
+	- We injected two images with malicious src attributes. First
+	image's src prompts a transfer, and the second image's src
+	confirms the transfer. 
