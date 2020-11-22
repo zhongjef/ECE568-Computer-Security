@@ -46,6 +46,7 @@ PART5: CSRF Token By-Pass
 	the token value taken through onload function. After the script
 	sets the url of the second iframe, the second iframe will reload
 	and finish the attack to transfer values specified in url.
+	(Note: same origin policy)
 
 PART6: String SQL Injection
 	- We injected SQL statement through unchecked input. The SQL
