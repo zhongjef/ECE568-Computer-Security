@@ -1,3 +1,9 @@
 part1:
-    - command: dig @127.0.0.1 -p 8080 +notcp ecf.utoronto.ca
+    - dig ecf.utoronto.ca
+    - dig @127.0.0.1 -p 5050 ecf.utoronto.ca  (MX/A/NS)
+
+part2:
+    - dig @127.0.0.1 -p 8080 +notcp ecf.utoronto.ca
+    - python dnsproxy_starter.py --port 8087 --dns_port 5050
+
 
