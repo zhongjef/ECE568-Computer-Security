@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import socket
-from scapy.all import DNS, DNSQR, DNSRR, IP, UDP, DNSRRNSEC
+from scapy.all import DNS, DNSQR, DNSRR
 
 
 SPROOF_ADDR = "5.6.6.8"
@@ -28,7 +28,7 @@ args = parser.parse_args()
 # Port to run the proxy on
 HOST = "127.0.0.1"
 PORT = args.port # defailt 8087
-# BIND's port
+# BIND's addr and port
 DNS_ADDR = "127.0.0.1"
 DNS_PORT = args.dns_port # we set to 6060
 # Flag to indicate if the proxy should spoof responses

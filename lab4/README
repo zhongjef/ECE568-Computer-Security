@@ -6,4 +6,10 @@ part2:
     - dig @127.0.0.1 -p 8087 +notcp ecf.utoronto.ca
     - python dnsproxy_starter.py --port 8087 --dns_port 6060
 
+part3:
+    - Use scapy's DNS class to wrap the packet, then modify
+    the response to a malicious address. Also adds two name
+    servers and delete everything in additioanl section by
+    setting arcount to 0.
 
+    TODO: Spoof response

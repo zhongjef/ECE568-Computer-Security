@@ -1,0 +1,5 @@
+#!/bin/bash
+for ((m=1; m < (200); m++));
+do
+    ./run_dns
+done

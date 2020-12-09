@@ -1,1 +1,1 @@
-python dnsproxy_starter.py --port 8087 --dns_port 6060
+python ./part4_starter.py --dns_port 6060 --query_port 6060

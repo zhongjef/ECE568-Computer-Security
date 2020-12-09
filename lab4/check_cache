@@ -1,0 +1,3 @@
+/share/copy/ece568f/lab4/bind9/sbin/rndc -c etc/rndc.conf dumpdb -cache
+
+less ./dump.db
