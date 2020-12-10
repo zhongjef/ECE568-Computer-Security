@@ -27,10 +27,10 @@ args = parser.parse_args()
 
 # Port to run the proxy on
 HOST = "127.0.0.1"
-PORT = args.port # defailt 8087
+PORT = args.port
 # BIND's addr and port
 DNS_ADDR = "127.0.0.1"
-DNS_PORT = args.dns_port # we set to 6060
+DNS_PORT = args.dns_port
 # Flag to indicate if the proxy should spoof responses
 SPOOF = args.spoof_response
 

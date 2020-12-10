@@ -1,3 +1,2 @@
 #!/bin/bash
 /share/copy/ece568f/lab4/run_bind.sh -c ./etc/named.conf
-

