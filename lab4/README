@@ -1,19 +1,57 @@
+#Peiqi Hu, 1002263935, peiqi.hu@mail.utoronto.ca
+#Jefferson Zhong, 1003946000, jefferson.zhong@mail.utoronto.ca
 
-Part1 Explanation:
-    - dig ecf.utoronto.ca
-    - dig @127.0.0.1 -p 6060 ecf.utoronto.ca  (MX/A/NS)
+Part1 Command Line Tool dig:
+    - Command
+        - dig ecf.utoronto.ca
+        - dig @127.0.0.1 -p 8080 ecf.utoronto.ca  (MX/A/NS)
 
-Part2 Explanation:
-    - dig @127.0.0.1 -p 8087 +notcp ecf.utoronto.ca
-    - python dnsproxy_starter.py --port 8087 --dns_port 6060
+    - Explanation:
+        - We used the above command statements to query for
+          DNS record of "ecf.utoronto.ca".
+        - The first command sends the DNS query to our host's
+          default DNS server
+        - The second sends the DNS query to the BIND DNS server.
 
-Part3 Explanation:
-    - Use scapy's DNS class to wrap the packet, then modify
-    the response to a malicious address. Also adds two name
-    servers and delete everything in additioanl section by
-    setting arcount to 0.
+Part2 Proxy Server:
+    - Command
+        - dig @127.0.0.1 -p 8087 +notcp ecf.utoronto.ca
+        - python dnsproxy_starter.py --port 8087 --dns_port 8080 
+    - Explanation
+        - We implemented a proxy server listening to address
+          "127.0.0.1" and port "8087". The proxy server will
+          forward received DNS query to the BIND server, then
+          reply back to the DNS response of BIND server.
+        - The implementation uses python UDP socket to
+          send and receive packets.
+    
+Part3 DNS Spoofing:
+    - Command
+        - python dnsproxy_starter.py --port 8087 --dns_port 8080 --spoof_response
+    - Explanation
+        - On top of Part2, we spoof the DNS reply from BIND
+          server.
+        - We Use scapy's DNS class to wrap the packet, then
+          modify the response to a malicious address "5.6.6.8"
+          and specified two nameservers "ns1.dnsattacker.net"
+          and "ns2.dnsattacker.net".
+          Also, everything in additioanl section are deleted
+          by setting arcount to 0.
 
-    TODO: Spoof response
-
-Part4 Explanation: 
-    - First create a normal DNS query and send it to 
+Part4 Kaminsky Attack: 
+    - Command
+        - python ./part4_starter.py --dns_port 8080 --query_port 5055
+    - Explanation
+        - A Kaminsky attack is performed.
+        - First step: Send out a normal DNS request query to a 
+          non-existing random sub-domain in example.com
+          (e.g. abc.example.com). 
+        - Second step: BIND server does not know the address of
+          "abc.example.com", thus it will query "example.com"
+          for the address. While BIND server is waiting for the
+          reply, we attack the BIND server using spoofed 125 
+          DNS responses with different guessed transaction IDs. 
+        - We repeat the first and second steps with another 
+          non-existing random sub-domain in example.com.
+          (e.g. xyz.example.com)
+        - The attack is repeated until success.

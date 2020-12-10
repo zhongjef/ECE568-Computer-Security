@@ -55,7 +55,7 @@ def sendPacket(sock, packet, ip, port):
 '''
 Example code that sends a DNS query using scapy.
 '''
-def exampleSendDNSQuery():
+def sendDNSQuery():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     
     dnsPacket = DNS(rd=1, qd=DNSQR(qname=SUB_DOMAIN))
@@ -84,7 +84,7 @@ def spoofDNS():
 if __name__ == '__main__':
     while True:
         SUB_DOMAIN = getRandomSubDomain() + '.' + DOMAIN
-        sock = exampleSendDNSQuery()
+        sock = sendDNSQuery()
         spoofDNS()
         data, (addr, port) = sock.recvfrom(4096)
         resp = DNS(data)

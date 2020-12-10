@@ -57,10 +57,10 @@ def forward_to_dns(data, serv, dig_addr, dig_port):
         # print("response_port", response_port)
         # print("response_data", response_data)
         dns_pkt = DNS(response_data)
-        
-        domain_name = dns_pkt[DNSQR].qname
-        # print("domain name", domain_name)
+
         if SPOOF:  #part3: SPOOF flag = true
+            domain_name = dns_pkt[DNSQR].qname
+            # print("domain name", domain_name)
             # modify dns response addr
             dns_pkt[DNS].an = DNSRR(rrname=domain_name, type='A', rdata=DNS_HOSTS[domain_name])
             dns_pkt[DNS].ancount = 1
