@@ -1,3 +1,4 @@
+#!/bin/bash
 /share/copy/ece568f/lab4/bind9/sbin/rndc -c etc/rndc.conf querylog
 python ./part4_starter.py --dns_port 8080 --query_port 5055
 ./check_cache | grep example.com | head -n 1
