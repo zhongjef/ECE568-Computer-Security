@@ -1,4 +1,4 @@
-# ECE568-Computer-Security
+# ECE568 Computer Security
 University of Toronto 2020 Fall ECE568 Computer Security
 
 **Author**: Changbai Hu, Jefferson Zhong
